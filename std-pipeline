@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('git push') {
+            steps {
+               git branch: 'main', url: 'https://github.com/akale9888/akash.git'
+            }
+        }
+          
+        stage('mvn build') {
+            steps {
+               sh'mvn clean package'
+            }
+        }
+         
+          stage('deploy') {
+            steps {
+               deploy adapters: [tomcat8(credentialsId: '8tomcat', path: '', url: 'http://172.31.2.91:8080')], contextPath: '/', war: '**/*.war'
+            }
+        }
+      }
+
+
+    }
